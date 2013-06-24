@@ -34,14 +34,16 @@
 		$ rsa dataset list	# list all available datasets
 
 	To get started with spatialcubeservice:
-		http://localhost:8080/spatialcubeservice/Dataset.xml
+		$ curl http://localhost:8080/spatialcubeservice/Dataset.xml
 
-	To get started with query:
-		http://localhost:8080/spatialcubeservice/app/index.html
-
-	As port 8080 is being forwarded to host port 8181, you can directly open below using port 	8181 on host machine:
-		http://localhost:8181/spatialcubeservice/Dataset.xml
 	```
+	As port `8080` is being forwarded to host port `8181`, you can directly access below URL from host machine using port 8181:
+	
+		http://localhost:8181/spatialcubeservice/Dataset.xml
+		
+	To get started with query from host machine:
+	
+		http://localhost:8181/spatialcubeservice/app/index.html
 
 
 
