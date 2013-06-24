@@ -30,8 +30,8 @@
                  Produced by VPAC
 
 	To get started with rsacli:
-		$ rsa -h		# see a complete list of usage
-		$ rsa dataset list	# list all available datasets
+		$ rsa -h					# see a complete list of usage
+		$ rsa dataset list			# list all available datasets
 
 	To get started with spatialcubeservice:
 		$ curl http://localhost:8080/spatialcubeservice/Dataset.xml
