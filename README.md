@@ -12,17 +12,36 @@
  2. Get `rsabuild` vagrant and puppet scripts from GitHub repository:
 
 		$ git clone git@github.com:VPAC/rsabuild.git
-
- 3. Go into `rsabuild` directory:
-
-		$ cd rsabuild
+		$ cd rsabuild					# Go into rsabuild directory
 	
- 4. Load up a guest VM using Vagrant by running:
+ 3. Load up a guest VM using Vagrant by running:
 		
 		$ vagrant up
 	
 
 	Once the above command finished running, you'll will have a fully running Centos VM with RSA installed.
+	
+	Once you ssh into the guest VM, you should see this usage below:
+
+	```
+	$ vagrant ssh
+	
+	Welcome to your newly built CentOS 6.3 guest VM with RSA installed!
+                 Produced by VPAC
+
+	To get started with rsacli:
+		$ rsa -h		# see a complete list of usage
+		$ rsa dataset list	# list all available datasets
+
+	To get started with spatialcubeservice:
+		http://localhost:8080/spatialcubeservice/Dataset.xml
+
+	To get started with query:
+		http://localhost:8080/spatialcubeservice/app/index.html
+
+	As port 8080 is being forwarded to host port 8181, you can directly open below using port 	8181 on host machine:
+		http://localhost:8181/spatialcubeservice/Dataset.xml
+	```
 
 
 
