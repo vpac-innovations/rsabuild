@@ -213,7 +213,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
 
   # make & install zlib
   exec {"install_zlib":
-    command => "make check install",
+    command => "make install",
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $zlib_dir,
@@ -250,7 +250,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
 
   # make & install hdf5
   exec {"install_hdf5":
-    command => "make check install",
+    command => "make install",
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $hdf5_dir,
@@ -289,7 +289,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
 
   # make & install netcdf
   exec {"install_nc":
-    command => "make check install",
+    command => "make install",
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $nc_dir,
