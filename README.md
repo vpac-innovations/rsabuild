@@ -1,7 +1,14 @@
 # Building RSA and its environment using vagrant:
 
- 1. Install vagrant using the following [instructions](http://docs.vagrantup.com/v2/installation/index.html).
+ 1. Install vagrant as shown [here](http://docs.vagrantup.com/v2/installation/index.html) or using the following instructions.
  
+	Debian/Ubuntu:
+	
+	```
+	$ sudo apt-get install virtualbox
+	$ sudo apt-get install vagrant
+	```
+ 	
  2. Get `rsabuild` vagrant and puppet scripts from GitHub repository:
 
 		$ git clone git@github.com:VPAC/rsabuild.git
@@ -10,14 +17,14 @@
 
 		$ cd rsabuild
 	
- 4. Load up a VM using Vagrant by running:
-
-		vagrant up
+ 4. Load up a guest VM using Vagrant by running:
+		
+		$ vagrant up
 	
 
-After running the above command, you'll will have a fully running Centos VM with RSA installed.
+	Once the above command finished running, you'll will have a fully running Centos VM with RSA installed.
 
-**Note:** User could easily configure vagrant to load up other type of VM such as Ubuntu with minimum changes to the scripts in rsabuild project.
+
 
 ### Commonly used vagrant commands:
 
