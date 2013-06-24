@@ -1,4 +1,4 @@
-# Building RSA and its environment using vagrant:
+# Building RSA and its environment using Vagrant:
 
  1. Install vagrant as shown [here](http://docs.vagrantup.com/v2/installation/index.html) or using the following instructions.
  
@@ -9,7 +9,7 @@
 	$ sudo apt-get install vagrant
 	```
  	
- 2. Get `rsabuild` vagrant and puppet scripts from GitHub repository:
+ 2. Get rsabuild vagrant and puppet scripts from GitHub repository:
 
 		$ git clone git@github.com:VPAC/rsabuild.git
 		$ cd rsabuild					# Go into rsabuild directory
@@ -19,7 +19,7 @@
 		$ vagrant up
 	
 
-	Once the above command finished running, you'll will have a fully running Centos VM with RSA installed.
+	Once the above command finished running, you'll will have a fully running Centos 6.3 VM with RSA installed.
 	
 	Once you ssh into the guest VM, you should see this usage below:
 
@@ -44,8 +44,6 @@
 	To get started with query from host machine:
 	
 		http://localhost:8181/spatialcubeservice/app/index.html
-
-
 
 ### Commonly used vagrant commands:
 
