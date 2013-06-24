@@ -37,7 +37,7 @@
 		$ curl http://localhost:8080/spatialcubeservice/Dataset.xml
 
 	```
-	As port `8080` is being forwarded to host port `8181`, you can directly access below URL from host machine using port 8181:
+	As port `8080` is being forwarded to host port `8181`, you can access below URL from host machine directly using port 8181:
 	
 		http://localhost:8181/spatialcubeservice/Dataset.xml
 		
