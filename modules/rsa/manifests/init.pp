@@ -377,6 +377,24 @@ export LD_LIBRARY_PATH=$RSACLI_DIST/lib:$LD_LIBRARY_PATH
   # declaring above class as resource
   class {'disable_iptables':}
 
+  $tomcat_webapp_dir="/usr/share/tomcat6/webapps"
+
+  # iptables firewall is messing port forwarding in Vagrant running CentOS so disable it
+  class delete_spatialcubeservice {
+    file {'/usr/share/tomcat6/webapps/spatialcubeservice.war':
+      ensure => absent,
+    }
+
+    file {'/usr/share/tomcat6/webapps/spatialcubeservice':
+      ensure => absent,
+      force => true,
+    }
+
+  }
+
+  # declaring above class as resource
+  class {'delete_spatialcubeservice':}
+
   $rsa_dist="/usr/local/src/rsa/src/dist"
 
   exec {"spatialcubeservice_war":
@@ -385,6 +403,7 @@ export LD_LIBRARY_PATH=$RSACLI_DIST/lib:$LD_LIBRARY_PATH
     onlyif => ["test -d $rsa_dist"],
     timeout => 0,
     path => ["/bin","/usr/bin"],
+    require => Class["delete_spatialcubeservice"],
   }
 
   $servlet_src="$rsa_dist/spatialcubeservice.war"
@@ -392,6 +411,6 @@ export LD_LIBRARY_PATH=$RSACLI_DIST/lib:$LD_LIBRARY_PATH
     path => $servlet_src,
   }
 
-  Exec["install_zlib"] -> Exec["install_hdf5"] -> Exec["install_nc"] -> Exec["install_gdal"] -> Exec["make_gdal_java"] -> Exec["enable_gdal"] -> Exec["build_rsa"] -> Exec["enable_rsacli"] -> Exec["spatialcubeservice_war"] -> Tomcat::Deployment["spatialcubeservice"] -> Class["disable_iptables"]
+  Exec["install_zlib"] -> Exec["install_hdf5"] -> Exec["install_nc"] -> Exec["install_gdal"] -> Exec["make_gdal_java"] -> Exec["enable_gdal"] -> Exec["build_rsa"] -> Exec["enable_rsacli"] -> Exec["spatialcubeservice_war"] -> File["/etc/tomcat6/tomcat6.conf"] -> Tomcat::Deployment["spatialcubeservice"] -> Class["disable_iptables"]
 
 }
