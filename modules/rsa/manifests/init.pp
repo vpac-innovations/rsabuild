@@ -3,7 +3,6 @@ class rsa {
   
   include epel
   include elgisrepos 
-  include tomcat
   include postgresql
 
   class { 'postgresql::server':
@@ -338,8 +337,6 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
 
   file {$rsa_dirs:
     ensure => "directory",
-    #owner  => "tomcat",
-    #group  => "tomcat",
     mode   => 775,
     require => Exec["enable_rsacli"],
   }
@@ -411,6 +408,6 @@ export LD_LIBRARY_PATH=$RSACLI_DIST/lib:$LD_LIBRARY_PATH
     path => $servlet_src,
   }
 
-  Exec["install_zlib"] -> Exec["install_hdf5"] -> Exec["install_nc"] -> Exec["install_gdal"] -> Exec["make_gdal_java"] -> Exec["enable_gdal"] -> Exec["build_rsa"] -> Exec["enable_rsacli"] -> Exec["spatialcubeservice_war"] -> File["/etc/tomcat6/tomcat6.conf"] -> Tomcat::Deployment["spatialcubeservice"] -> Class["disable_iptables"]
+  Exec["install_zlib"] -> Exec["install_hdf5"] -> Exec["install_nc"] -> Exec["install_gdal"] -> Exec["make_gdal_java"] -> Exec["enable_gdal"] -> Exec["build_rsa"] -> Exec["enable_rsacli"] -> Exec["spatialcubeservice_war"] -> Tomcat::Deployment["spatialcubeservice"] -> Class["disable_iptables"]
 
 }
