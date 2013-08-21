@@ -54,6 +54,22 @@ class rsa {
     ensure => installed,
   }
 
+  group { "rsa":
+    ensure => "present",
+  }
+
+  group { "tomcat":
+    ensure => "present",
+  }
+
+  user { "tomcat":
+        ensure => present,
+        gid => "tomcat",
+        groups => ["rsa"],
+        require => [Group["rsa"],Group["tomcat"]],
+  }
+
+
   $gdal_checkout="/usr/local/src/gdal-trunk"
   $gdal_checkout_revision="26089"
   $gdal_repo="https://svn.osgeo.org/gdal/trunk"
@@ -82,7 +98,6 @@ JAVA=$(JAVA_HOME)/bin/java
 JAR=$(JAVA_HOME)/bin/jar
 JAVA_INCLUDE=-I/usr/lib/jvm/java/include -I/usr/lib/jvm/java/include/linux
 ",
-    before => Exec["configure_gdal"],
   }
 
   # configure gdal
@@ -91,7 +106,7 @@ JAVA_INCLUDE=-I/usr/lib/jvm/java/include -I/usr/lib/jvm/java/include/linux
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $gdal_make,
-    before => Exec["make_gdal"],
+    require => [Exec["install_nc"], File["java_opt"]],
   }
 
   # make gdal
@@ -100,7 +115,7 @@ JAVA_INCLUDE=-I/usr/lib/jvm/java/include -I/usr/lib/jvm/java/include/linux
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $gdal_make,
-    before => Exec["install_gdal"],
+    require => Exec["configure_gdal"],
   }
 
   # install gdal
@@ -109,7 +124,7 @@ JAVA_INCLUDE=-I/usr/lib/jvm/java/include -I/usr/lib/jvm/java/include/linux
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $gdal_make,
-    before => Exec["make_gdal_java"],
+    require => Exec["make_gdal"],
   }
 
   # make gdal java binding
@@ -187,7 +202,6 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     path    => "${usr_local_src}/${zlib}",
     ensure  => file,
     source  => "puppet:///modules/rsa/${zlib}",
-    before => Exec['tar_zlib'],
   }
 
   # unzip into /usr/local/src/zlib-1.2.7
@@ -197,7 +211,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     path => ["/bin","/usr/bin"],
     creates => "${zlib_dir}/configure",
     cwd => "${usr_local_src}",
-    before => Exec["configure_zlib"],
+    require => File["zlib"],
   }
 
   # configure zlib
@@ -207,7 +221,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $zlib_dir,
-    before => Exec["install_zlib"],
+    require => Exec["tar_zlib"],
   }
 
   # make & install zlib
@@ -216,6 +230,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $zlib_dir,
+    require => Exec["configure_zlib"],
   }
 
   # get hdf5 1.8.9 (version 1.8.6+ required)
@@ -235,7 +250,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     path => ["/bin","/usr/bin"],
     creates => "${hdf5_dir}/configure",
     cwd => "${usr_local_src}",
-    before => Exec["configure_hdf5"],
+    require => File["hdf5"],
   }
 
   # configure hdf5
@@ -244,7 +259,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $hdf5_dir,
-    before => Exec["install_hdf5"],
+    require => Exec["tar_hdf5"],
   }
 
   # make & install hdf5
@@ -253,6 +268,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $hdf5_dir,
+    require => Exec["configure_hdf5"],
   }
 
   # get latest netcdf (version 4.3.0+ required)
@@ -272,7 +288,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     path => ["/bin","/usr/bin"],
     creates => "${nc_dir}/configure",
     cwd => "${usr_local_src}",
-    before => Exec["configure_nc"],
+    require => File["nc"],
   }
 
   # configure netcdf
@@ -283,7 +299,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $nc_dir,
-    before => Exec["install_nc"],
+    require => Exec["tar_nc"],
   }
 
   # make & install netcdf
@@ -292,6 +308,7 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
     timeout => 0,
     path => ["/bin","/usr/bin"],
     cwd => $nc_dir,
+    require => Exec["configure_nc"],
   }
 
   $rsa_checkout="/usr/local/src/rsa"
@@ -337,8 +354,9 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
 
   file {$rsa_dirs:
     ensure => "directory",
-    mode   => 775,
-    require => Exec["enable_rsacli"],
+    mode   => 2775,
+    group  => "rsa",
+    require => [Exec["enable_rsacli"], Group["rsa"]],
   }
 
   $export_rsacli_sh="/etc/profile.d/export_rsacli.sh"
@@ -409,5 +427,4 @@ export LD_LIBRARY_PATH=$RSACLI_DIST/lib:$LD_LIBRARY_PATH
   }
 
   Exec["install_zlib"] -> Exec["install_hdf5"] -> Exec["install_nc"] -> Exec["install_gdal"] -> Exec["make_gdal_java"] -> Exec["enable_gdal"] -> Exec["build_rsa"] -> Exec["enable_rsacli"] -> Exec["spatialcubeservice_war"] -> Tomcat::Deployment["spatialcubeservice"] -> Class["disable_iptables"]
-
 }

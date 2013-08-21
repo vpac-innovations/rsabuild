@@ -68,4 +68,13 @@ Vagrant::Config.run do |config|
 		     ]
   end
 
+
 end
+
+# Additional provisioner to add default 'vagrant' user to the 'rsa' group that owns the
+# various rsa storage directories
+Vagrant::Config.run do |config|
+  config.vm.provision :shell, :inline => "usermod -a -G rsa vagrant"
+end
+
+
