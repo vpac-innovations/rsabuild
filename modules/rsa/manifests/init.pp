@@ -56,6 +56,7 @@ class rsa {
 
   group { "rsa":
     ensure => "present",
+    gid    => 2061,
   }
 
   group { "tomcat":
