@@ -15,8 +15,8 @@ class rsa {
     },
   }
 
-  postgresql::db { 'uladb':
-    user     => 'ula',
+  postgresql::db { 'rsa':
+    user     => 'rsa',
     password => 'password',
     grant    => 'all',
   }
