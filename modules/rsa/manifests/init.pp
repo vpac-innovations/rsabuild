@@ -318,14 +318,22 @@ export LD_LIBRARY_PATH=$GDAL_DIR/lib:$LD_LIBRARY_PATH
   vcsrepo {"/usr/local/src/rsa":
     ensure => present,
     provider => git,
-    source => 'git://github.com/VPAC/rsa.git',
-    revision => 'HEAD',
+    source => 'git://github.com/vpac-innovations/rsa.git',
+    before => Exec["checkout_rsa_branch"],
+  }
+
+  # checkout akka-worker branch
+  exec {"checkout_rsa_branch":
+    command => "git checkout -b akka-workers",
+    timeout => 0,
+    path => ["/bin","/usr/bin"],
+    cwd => $rsa_checkout,
     before => Exec["update_rsa"],
   }
 
   # update rsa 
   exec {"update_rsa":
-    command => "git pull --quiet",
+    command => "git pull origin akka-workers",
     onlyif => ["test -d $rsa_checkout"],
     timeout => 0,
     path => ["/bin","/usr/bin"],
