@@ -405,11 +405,11 @@ export LD_LIBRARY_PATH=$RSACLI_DIST/lib:$LD_LIBRARY_PATH
 
   # iptables firewall is messing port forwarding in Vagrant running CentOS so disable it
   class delete_spatialcubeservice {
-    file {'/usr/share/tomcat6/webapps/spatialcubeservice.war':
+    file {'/usr/share/tomcat6/webapps/rsa.war':
       ensure => absent,
     }
 
-    file {'/usr/share/tomcat6/webapps/spatialcubeservice':
+    file {'/usr/share/tomcat6/webapps/rsa':
       ensure => absent,
       force => true,
     }
@@ -430,7 +430,7 @@ export LD_LIBRARY_PATH=$RSACLI_DIST/lib:$LD_LIBRARY_PATH
     require => Class["delete_spatialcubeservice"],
   }
 
-  $servlet_src="$rsa_dist/spatialcubeservice.war"
+  $servlet_src="$rsa_dist/rsa.war"
   tomcat::deployment {"spatialcubeservice":
     path => $servlet_src,
   }
