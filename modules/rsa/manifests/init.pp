@@ -422,7 +422,7 @@ export LD_LIBRARY_PATH=$RSACLI_DIST/lib:$LD_LIBRARY_PATH
   $rsa_dist="/usr/local/src/rsa/src/dist"
 
   exec {"spatialcubeservice_war":
-    command => "cp spatialcubeservice_*.war spatialcubeservice.war",
+    command => "cp rsa_*.war rsa.war",
     cwd => "$rsa_dist",
     onlyif => ["test -d $rsa_dist"],
     timeout => 0,
